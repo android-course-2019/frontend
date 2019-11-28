@@ -8,12 +8,6 @@
     margin: 0;
   }
 
-  :root {
-    --primary-color: #E4B660;
-    --tab-bar-height: 58px;
-    --tab-bar-display-height: calc(var(--tab-bar-height) + env(safe-area-inset-bottom));
-  }
-
   .row-flex-container {
     display: flex;
     flex-direction: row;
@@ -37,5 +31,10 @@
   .second-axis-space.row-flex-container,
   .second-axis-space.col-flex-container{
     justify-content: space-around;
+  }
+
+  .second-axis-between.row-flex-container,
+  .second-axis-between.col-flex-container{
+    justify-content: space-between;
   }
 </style>
