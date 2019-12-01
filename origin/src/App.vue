@@ -8,6 +8,11 @@
     margin: 0;
   }
 
+  .el-message {
+    width: 95vw !important;
+    min-width: 95vw !important;
+  }
+
   .row-flex-container {
     display: flex;
     flex-direction: row;

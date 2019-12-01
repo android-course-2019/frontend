@@ -6,7 +6,7 @@
         <el-button type="primary" class="login-btn" @click="toLogin">登陆</el-button>
         <el-button class="login-btn" @click="toSignUp">注册</el-button>
       </div>
-      <div v-if="loginStatus==='login'" class="col-flex-container main-axis-center second-axis-space input-container">
+      <form v-if="loginStatus==='login'" class="col-flex-container main-axis-center second-axis-space input-container">
         <el-input v-model="phone" class="login-input">
           <template slot="prepend">手机</template>
         </el-input>
@@ -19,8 +19,8 @@
         </div>
         <el-button class="login-input login-button" type="primary" plain @click="login">登陆</el-button>
         <el-button class="login-input login-button" plain @click="toInit">返回</el-button>
-      </div>
-      <div v-if="loginStatus==='signUp'" class="col-flex-container main-axis-center second-axis-space input-container">
+      </form>
+      <form v-if="loginStatus==='signUp'" class="col-flex-container main-axis-center second-axis-space input-container">
         <el-input v-model="phone" class="login-input">
           <template slot="prepend">手机号</template>
           <el-button slot="append" @click="sendCode" :disabled="!canGet">{{canGet?'获取验证码':`${second}秒`}}</el-button>
@@ -31,14 +31,16 @@
         <el-input v-model="code" class="login-input">
           <template slot="prepend">验证码</template>
         </el-input>
-        <el-button class="login-input login-button" type="primary" plain>注册</el-button>
+        <el-button class="login-input login-button" type="primary" plain @click="signUp">注册</el-button>
         <el-button class="login-input login-button" plain @click="toInit">返回</el-button>
-      </div>
+      </form>
     </div>
   </div>
 </template>
 
 <script>
+import utils from '@/utils'
+
 export default {
   name: 'Login',
   data () {
@@ -53,7 +55,13 @@ export default {
     }
   },
   methods: {
+    clear () {
+      this.phone = ''
+      this.password = ''
+      this.code = ''
+    },
     toInit () {
+      this.clear()
       this.loginStatus = 'init'
     },
     toLogin () {
@@ -64,7 +72,7 @@ export default {
     },
     sendCode () {
       let phone = this.phone
-      if (!/^1[0-9]{10}$/.test(phone)) {
+      if (!utils.checkPhone(phone)) {
         this.$message.warning('请输入正确的手机！')
         return
       }
@@ -72,11 +80,7 @@ export default {
         .then(res => {
           let code = res.data.code
           if (code !== 200) {
-            if (code === -205) {
-              this.$message.error('输入有误，请重试！')
-            } else {
-              this.$message.error('网络错误，请稍后再试！')
-            }
+            utils.showLoginErrorMessage(code)
             return
           }
           this.$message.success('发送成功！')
@@ -93,13 +97,46 @@ export default {
         })
     },
     login () {
+      console.log(this.$api)
       this.$api.login(this.phone, this.password)
         .then(res => {
           console.log(res)
-          if (res.data.code === 200) {
-            this.$message.success('登陆成功！')
+          if (res.data.code !== 200) {
+            utils.showLoginErrorMessage(res.data.code)
+            return
           }
+          this.$message.success('登陆成功！')
+          this.$router.replace('/')
         })
+        .catch(err => console.log(err))
+    },
+    signUp () {
+      if (!utils.checkPhone(this.phone)) {
+        this.$message.warning('请输入正确的手机！')
+        return
+      }
+      if (!utils.checkPassword(this.password)) {
+        this.$message.warning('密码至少包含一个字母，一个数字并至少8位！')
+        return
+      }
+      if (this.gotPhone !== this.phone) {
+        this.$message.warning('请先获取验证码！')
+        return
+      }
+      this.$api.signUp(this.phone, this.password, this.validateCode)
+        .then(res => {
+          if (res.data.code !== 200) {
+            utils.showLoginErrorMessage(res.data.code)
+            return
+          }
+          this.$message.success('注册成功！正在返回')
+          setTimeout(this.$router.replace('/'), 3000)
+        })
+    }
+  },
+  mounted () {
+    if (this.$store.getters.logged) {
+      this.$router.replace('/')
     }
   }
 }

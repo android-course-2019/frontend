@@ -51,6 +51,13 @@ export default {
       }
     }
     next()
+  },
+  mounted () {
+    if (this.$store.getters.logged) {
+      console.log('logged!')
+    } else {
+      this.$store.dispatch('fetchInfo')
+    }
   }
 }
 </script>
