@@ -3,13 +3,14 @@ import Drinks from '@/views/Drinks'
 import Messages from '@/views/Messages'
 import Home from '@/views/Home'
 import Login from '@/views/Login'
+import Search from '@/views/Search'
 
 export default {
   viewsPath: {
     posters: {
       component: Posters,
       tabBar: {
-        label: '评 价',
+        label: '点 评',
         icon: 'el-icon-house'
       }
     },
@@ -36,6 +37,13 @@ export default {
     },
     login: {
       component: Login
+    },
+    search: {
+      component: Search,
+      header: {
+        returnable: true,
+        text: '搜索'
+      }
     }
   }
 }

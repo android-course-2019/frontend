@@ -1,6 +1,8 @@
 <template>
   <div class="navigation-bar">
-    <i v-if="returnable" class="el-icon-arrow-left navigation-bar-back-icon"/>
+    <div class="navigation-bar-back" @click="$router.back()" v-if="returnable" >
+      <i class="el-icon-arrow-left"/>
+    </div>
     <div v-else></div>
     <div class="navigation-bar-title">{{headerText}}</div>
     <div class="trailing-content-wrapper">
@@ -17,6 +19,11 @@ export default {
   props: {
     returnable: Boolean,
     headerText: String
+  },
+  methods: {
+    goBack () {
+      this.$router.go(-1)
+    }
   }
 }
 </script>
@@ -32,12 +39,13 @@ export default {
   height: @navigation-bar-display-height;
   border-block-end: 1px solid #E9E9EB;
   padding-block-start: env(safe-area-inset-top);
-  .navigation-bar-back-icon {
+  .navigation-bar-back {
     position: absolute;
     font-size: 22px;
     line-height: 22px;
     left: 12px;
     bottom: 14px;
+    z-index: 999;
   }
   .navigation-bar-title {
     font-size: 18px;

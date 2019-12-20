@@ -5,6 +5,7 @@
       <div v-if="loginStatus==='init'" class="col-flex-container main-axis-center second-axis-space btn-container">
         <el-button type="primary" class="login-btn" @click="toLogin">登陆</el-button>
         <el-button class="login-btn" @click="toSignUp">注册</el-button>
+        <el-button class="login-btn" @click="$router.back()">返回</el-button>
       </div>
       <form v-if="loginStatus==='login'" class="col-flex-container main-axis-center second-axis-space input-container">
         <el-input v-model="phone" class="login-input">

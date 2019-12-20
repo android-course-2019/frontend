@@ -11,11 +11,24 @@ export default new Vuex.Store({
   mutations: {
     setInfo (state, payload) {
       state.detail = payload
+    },
+    logout (state) {
+      state.detail = null
     }
   },
   actions: {
     fetchInfo (context) {
-      userApis.getUserInfo()
+      if (!context.getters.logged) return
+      userApis.getMyInfo()
+        .then(res => {
+          if (res.data.code === 200) {
+            context.commit('setInfo', res.data.data)
+          }
+        })
+        .catch(err => console.log(err))
+    },
+    tryLogin (context) {
+      userApis.getMyInfo()
         .then(res => {
           if (res.data.code === 200) {
             context.commit('setInfo', res.data.data)
@@ -25,6 +38,6 @@ export default new Vuex.Store({
     }
   },
   getters: {
-    logged: state => (state.detail != null)
+    logged: state => state.detail != null
   }
 })

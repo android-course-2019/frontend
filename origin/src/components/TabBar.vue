@@ -15,11 +15,6 @@ export default {
   props: {
     items: Array,
     currentIndex: Number
-  },
-  methods: {
-    // switchTab: index => {
-    //   this.$emit('switchTab', index)
-    // }
   }
 }
 </script>
@@ -31,6 +26,7 @@ export default {
     bottom: 0;
     left: 0;
     right: 0;
+    z-index: 999;
     padding-block-end: env(safe-area-inset-bottom);
     height: @tab-bar-display-height;
     border-block-start: 1px solid #E9E9EB;

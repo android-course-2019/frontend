@@ -4,8 +4,13 @@
 
 <style lang="less">
   body {
-    font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+    font-family: -apple-system,BlinkMacSystemFont,Helvetica Neue,PingFang SC,Microsoft YaHei,Source Han Sans SC,Noto Sans CJK SC,WenQuanYi Micro Hei,sans-serif;;
     margin: 0;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
   }
 
   .el-message {

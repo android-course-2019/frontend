@@ -21,6 +21,9 @@ __axiosInstance.interceptors.response.use(
     if (res.data.withCredential) {
       store.dispatch('fetchInfo').then()
     }
+    if (res.data.code === -216 && store.getters.logged) {
+      store.commit('logout')
+    }
     return res
   },
   err => {
