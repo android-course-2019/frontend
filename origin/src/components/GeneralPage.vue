@@ -66,8 +66,9 @@ export default {
   mounted () {
     if (this.$store.getters.logged) {
       console.log('logged!')
-    } else {
       this.$store.dispatch('fetchInfo')
+    } else {
+      this.$store.dispatch('tryLogin')
     }
   }
 }

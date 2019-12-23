@@ -13,6 +13,22 @@ export default {
       .test(password)
   },
 
+  dateStringify: (timestamp) => {
+    let delta = Math.floor((new Date()).getTime() / 1000) - timestamp
+    let now = new Date()
+    let then = new Date(timestamp * 1000)
+    if (now.getFullYear() !== then.getFullYear()) return `${then.getFullYear()}/${then.getMonth() + 1}/${then.getDate()}}`
+    if (now.getMonth() !== then.getMonth()) return `${then.getMonth() + 1}月${then.getDate()}日`
+    if (delta < 60) return '刚刚'
+    if (delta < 300) return `${Math.floor(delta / 60)}分钟前`
+    let deltaDay = now.getDate() - then.getDate()
+    if (deltaDay === 0) return `${then.getHours()}:${then.getMinutes()}`
+    if (deltaDay === 1) return '昨天'
+    let weekDays = ['一', '二', '三', '四', '五', '六', '日']
+    if (deltaDay < 7) return `星期${weekDays[then.getDay()]}`
+    return `${then.getMonth() + 1}月${then.getDate()}日`
+  },
+
   showLoginErrorMessage: (code) => {
     switch (code) {
       case -201:

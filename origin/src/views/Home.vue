@@ -2,20 +2,20 @@
   <div id="home-page">
     <div class="top-block">
       <div class="search-bar-wrapper row-flex-container main-axis-center second-axis-between">
-        <el-avatar class="avatar"/>
-        <router-link class="search-bar row-flex-container main-axis-center" to="search">
-          <i class="el-icon-search"/>搜索
-        </router-link>
-        <router-link to="search">
-          <i class="el-icon-setting"/>
-        </router-link>
+        <div class="spacer"/>
+<!--        <el-avatar class="avatar"/>-->
+<!--        <router-link class="search-bar row-flex-container main-axis-center" to="search">-->
+<!--          <i class="el-icon-search"/>搜索-->
+<!--        </router-link>-->
+        <el-button round size="small" @click="logout">
+          注销
+        </el-button>
       </div>
     </div>
     <div class="content-container col-flex-container">
       <div v-if="logged" class="info-block my-info-container col-flex-container">
-        <!--suppress HtmlUnknownTarget -->
         <el-avatar :size="100" :src="myBasicInfo.avatarUrl" class="avatar"/>
-        <el-button style="align-self: flex-end;margin-inline-end: 20px;" round>修改信息</el-button>
+        <el-button style="align-self: flex-end;margin-inline-end: 5px;" round>修改信息</el-button>
         <div class="my-text-info">
           <div>{{myBasicInfo.nickName}}</div>
         </div>
@@ -29,23 +29,24 @@
           </div>
         </div>
       </div>
-      <div v-if="logged" class="info-block poster-container">
+      <div v-if="logged" class="info-block poster-container col-flex-container main-axis-center"
+           style="background-color: #FAFAFA">
         <el-tabs v-model="posterTab" stretch>
           <el-tab-pane label="我发布的" name="created" v-infinite-scroll="loadMoreCreated">
-            <div class="poster-item" v-for="(index, item) in myInfo.createdPosters" :key="index">
-              {{item}}
+            <div class="poster-item" v-for="(item, index) in myInfo.createdPosters" :key="index">
+              <Poster :detail="item[0]"/>
             </div>
-            <div v-if="createdStatus===1">加载中</div>
-            <div v-if="myInfo.createdPosters.length===0&&createdStatus!==1">找不到点评，快去写一个吧～</div>
-            <div v-if="myInfo.createdPosters.length!==0&&createdStatus===2">没有更多啦</div>
+            <div v-if="createdStatus===1" class="hint-text">加载中</div>
+            <div v-if="myInfo.createdPosters.length===0&&createdStatus!==1" class="hint-text">找不到点评，快去写一个吧～</div>
+            <div v-if="myInfo.createdPosters.length!==0&&createdStatus===2" class="hint-text">没有更多啦</div>
           </el-tab-pane>
           <el-tab-pane label="我点赞的" name="liked">
-            <div class="poster-item" v-for="(index, item) in myInfo.likedPosters" :key="index">
-              {{item}}
+            <div class="poster-item" v-for="(item, index) in myInfo.likedPosters" :key="index">
+              <Poster :detail="item[0]"/>
             </div>
-            <div v-if="likedStatus===1">加载中</div>
-            <div v-if="myInfo.likedPosters.length===0&&likedStatus!==1">找不到点评，快去赞一个吧～</div>
-            <div v-if="myInfo.likedPosters.length!==0&&likedStatus===2">没有更多啦</div>
+            <div v-if="likedStatus===1" class="hint-text">加载中</div>
+            <div v-if="myInfo.likedPosters.length===0&&likedStatus!==1" class="hint-text">找不到点评，快去赞一个吧～</div>
+            <div v-if="myInfo.likedPosters.length!==0&&likedStatus===2" class="hint-text">没有更多啦</div>
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -63,8 +64,12 @@
 </template>
 
 <script>
+import Poster from '@/components/Poster'
 export default {
   name: 'Home',
+  components: {
+    Poster
+  },
   data () {
     return {
       myInfo: {
@@ -89,7 +94,9 @@ export default {
     }
   },
   mounted () {
-    if (!this.logged) return
+    if (!this.logged) {
+      this.$store.dispatch('tryLogin')
+    }
     this.$api.getMyFollow()
       .then(res => {
         if (res.data.code === 200) {
@@ -105,7 +112,7 @@ export default {
       this.createdStatus = 1
       this.$api.getMyCreatedPostersInPage(this.createdNext, 10)
         .then(res => {
-          if (res.data.code === -202) {
+          if (res.data.code === this.$apiError.INVALID_PAGING_OFFSET) {
             this.createdStatus = 2
             return
           }
@@ -125,7 +132,7 @@ export default {
       this.likedStatus = 1
       this.$api.getMyLikedPostersInPage(this.likedNext, 10)
         .then(res => {
-          if (res.data.code === -202) {
+          if (res.data.code === this.$apiError.INVALID_PAGING_OFFSET) {
             this.likedStatus = 2
             return
           }
@@ -138,6 +145,10 @@ export default {
             this.likedStatus = 0
           }
         })
+    },
+    logout () {
+      this.$store.commit('logout')
+      this.$api.logout()
     }
   }
 }
@@ -159,7 +170,11 @@ export default {
     .search-bar-wrapper {
       height: 50px;
       background-color: transparent;
-      padding: 10px 12px;
+      padding: 10px 15px;
+      i.el-icon-setting {
+        font-size: 30px;
+        color: @primary-color;
+      }
       .search-bar {
         height: 30px;
         flex-grow: 1;
@@ -182,7 +197,7 @@ export default {
       }
     }
     .content-container {
-      background-color: #ddd;
+      background-color: #f0f0f0;
       position: relative;
       width: 100%;
       min-height: calc(100vh - @tab-bar-display-height - 120px);
@@ -193,17 +208,16 @@ export default {
           margin-block-start: 10px;
         }
         background-color: white;
+        border-radius: 8px;
       }
       .my-info-container, .not-logged-info-container {
-        border-top-left-radius: 8px;
-        border-top-right-radius: 8px;
         padding: 20px;
         position: relative;
         .avatar {
           position: absolute;
           width: 100px;
           height: 100px;
-          left: 12px;
+          left: 20px;
           top: -48px;
           i {
             font-size: 70px;
@@ -230,7 +244,12 @@ export default {
         flex-grow: 1;
       }
       .poster-container {
-        padding: 0 12px;
+        padding: 0 12px 18px 12px;
+        align-items: stretch;
+        .hint-text {
+          font-size: 12px;
+          color: #999;
+        }
       }
     }
   }

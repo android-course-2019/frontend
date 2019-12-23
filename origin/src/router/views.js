@@ -1,9 +1,11 @@
 import Posters from '@/views/Posters'
-import Drinks from '@/views/Drinks'
 import Messages from '@/views/Messages'
 import Home from '@/views/Home'
 import Login from '@/views/Login'
 import Search from '@/views/Search'
+import CreatePoster from '@/views/CreatePoster'
+import Chat from '@/views/Chat'
+import PosterDetail from '@/views/PosterDetail'
 
 export default {
   viewsPath: {
@@ -12,13 +14,6 @@ export default {
       tabBar: {
         label: '点 评',
         icon: 'el-icon-house'
-      }
-    },
-    drinks: {
-      component: Drinks,
-      tabBar: {
-        label: '饮 品',
-        icon: 'el-icon-milk-tea'
       }
     },
     messages: {
@@ -40,10 +35,19 @@ export default {
     },
     search: {
       component: Search,
-      header: {
-        returnable: true,
-        text: '搜索'
-      }
+      header: true
+    },
+    createPoster: {
+      component: CreatePoster,
+      header: true
+    },
+    chat: {
+      component: Chat,
+      header: true
+    },
+    posterDetail: {
+      component: PosterDetail,
+      header: true
     }
   }
 }

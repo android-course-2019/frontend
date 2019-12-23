@@ -3,8 +3,8 @@ import store from '@/store'
 import { Message } from 'element-ui'
 
 export const __axiosInstance = axios.create({
-  // baseURL: 'https://aliyun.yh0x13f.cn/api/android-course/',
-  baseURL: '/api',
+  baseURL: 'https://aliyun.yh0x13f.cn/api/android-course/',
+  // baseURL: '/api',
   timeout: 10000
 })
 
@@ -19,7 +19,9 @@ __axiosInstance.interceptors.request.use(
 __axiosInstance.interceptors.response.use(
   res => {
     if (res.data.withCredential) {
-      store.dispatch('fetchInfo').then()
+      setTimeout(_ => {
+        store.dispatch('fetchInfo').then()
+      }, 1000)
     }
     if (res.data.code === -216 && store.getters.logged) {
       store.commit('logout')

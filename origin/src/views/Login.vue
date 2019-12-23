@@ -29,6 +29,9 @@
         <el-input v-model="password" show-password class="login-input">
           <template slot="prepend">密 码</template>
         </el-input>
+        <el-input v-model="nickName" class="login-input">
+          <template slot="prepend">昵 称</template>
+        </el-input>
         <el-input v-model="code" class="login-input">
           <template slot="prepend">验证码</template>
         </el-input>
@@ -52,7 +55,8 @@ export default {
       code: '',
       canGet: true,
       gotPhone: '',
-      second: ''
+      second: '',
+      nickName: ''
     }
   },
   methods: {
@@ -124,7 +128,11 @@ export default {
         this.$message.warning('请先获取验证码！')
         return
       }
-      this.$api.signUp(this.phone, this.password, this.validateCode)
+      if (this.nickName === '') {
+        this.$message.warning('请输入昵称！')
+        return
+      }
+      this.$api.signUp(this.phone, this.password, this.code, this.nickName)
         .then(res => {
           if (res.data.code !== 200) {
             utils.showLoginErrorMessage(res.data.code)
