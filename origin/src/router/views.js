@@ -1,5 +1,6 @@
 import Posters from '@/views/Posters'
 import Messages from '@/views/Messages'
+import Drinks from '@/views/Drinks'
 import Home from '@/views/Home'
 import Login from '@/views/Login'
 import Search from '@/views/Search'
@@ -14,6 +15,13 @@ export default {
       tabBar: {
         label: '点 评',
         icon: 'el-icon-house'
+      }
+    },
+    drink: {
+      component: Drinks,
+      tabBar: {
+        label: '饮 品',
+        icon: 'el-icon-milk-tea'
       }
     },
     messages: {

@@ -3,8 +3,8 @@ import store from '@/store'
 import { Message } from 'element-ui'
 
 export const __axiosInstance = axios.create({
-  baseURL: 'https://aliyun.yh0x13f.cn/api/android-course/',
-  // baseURL: '/api',
+  // baseURL: 'https://aliyun.yh0x13f.cn/api/android-course/',
+  baseURL: '/api',
   timeout: 10000
 })
 
